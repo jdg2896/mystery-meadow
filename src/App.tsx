@@ -132,13 +132,19 @@ export default function App() {
           </div>
         </div>
 
-        {/* Mobile: one tab at a time */}
+        {/* Mobile: all tabs mounted, only the active one is visible.
+            Keeping the DOM in place avoids the unmount/remount "reload" flash
+            when switching tabs — only window scroll changes. */}
         <div className="lg:hidden">
-          {mobileTab === "grid" && <DeductionGrid puzzle={puzzle} disabled={outcome !== null} />}
-          {mobileTab === "clues" && <ClueList puzzle={puzzle} />}
-          {mobileTab === "accuse" && (
+          <div hidden={mobileTab !== "grid"}>
+            <DeductionGrid puzzle={puzzle} disabled={outcome !== null} />
+          </div>
+          <div hidden={mobileTab !== "clues"}>
+            <ClueList puzzle={puzzle} />
+          </div>
+          <div hidden={mobileTab !== "accuse"}>
             <AccusationPanel puzzle={puzzle} onResolve={() => undefined} />
-          )}
+          </div>
         </div>
 
         {/* Mobile-only: nudge the player to the Accuse tab once all three picks are set */}
