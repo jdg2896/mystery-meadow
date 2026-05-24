@@ -8,6 +8,7 @@ import { Icon } from "./components/Icon";
 import { MobileTabs } from "./components/MobileTabs";
 import { ResultModal } from "./components/ResultModal";
 import type { ClueSegment } from "./engine/types";
+import { usePreloadAssets } from "./hooks/usePreloadAssets";
 import { usePuzzle, useRandomFreeSeed } from "./hooks/usePuzzle";
 import { usePuzzleStore } from "./store/puzzleStore";
 import { useUiStore } from "./store/uiStore";
@@ -29,6 +30,8 @@ export default function App() {
 
   const [showResult, setShowResult] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+
+  usePreloadAssets();
 
   useEffect(() => {
     if (outcome) setShowResult(true);

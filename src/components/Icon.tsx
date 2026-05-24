@@ -31,6 +31,7 @@ export function Icon({ kind, id, emoji, alt = "", className = "" }: Props) {
     <img
       src={src}
       alt={alt}
+      decoding="async"
       onError={() => {
         if (extIdx < EXTS.length - 1) setExtIdx(extIdx + 1);
         else setFailed(true);
