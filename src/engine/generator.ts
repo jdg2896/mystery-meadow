@@ -1,7 +1,7 @@
 import { CHARACTERS } from "../data/characters";
 import { ITEMS, itemById } from "../data/items";
 import { LOCATIONS, locationById } from "../data/locations";
-import { resetClueStyling, writeClue } from "./clueWriter";
+import { partsToText, writeClueParts } from "./clueWriter";
 import { hashStringToSeed, mulberry32, shuffle, type Rng } from "./seededRandom";
 import { countSolutions } from "./solver";
 import type { Clue, Puzzle, Solution } from "./types";
@@ -133,12 +133,15 @@ function tryGenerate(seedKey: string, seed: number, rng: Rng): Puzzle | null {
   // We aim for 4–9 clues after pruning.
   if (minimal.length < 4 || minimal.length > 9) return null;
 
-  resetClueStyling();
-  const clues = minimal.map((c, idx) => ({
-    id: `clue-${idx}`,
-    clue: c,
-    text: writeClue(c),
-  }));
+  const clues = minimal.map((c, idx) => {
+    const parts = writeClueParts(c);
+    return {
+      id: `clue-${idx}`,
+      clue: c,
+      parts,
+      text: partsToText(parts),
+    };
+  });
 
   const itemLabel = itemById(stolenItem).name;
   const locLabel = locationById(sceneLocation).name;

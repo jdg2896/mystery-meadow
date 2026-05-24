@@ -4,6 +4,7 @@ import { type GridKey, usePuzzleStore } from "../store/puzzleStore";
 import { characterById } from "../data/characters";
 import { itemById } from "../data/items";
 import { locationById } from "../data/locations";
+import { Icon, type IconKind } from "./Icon";
 
 type AxisCategory = "suspect" | "item" | "location";
 
@@ -12,17 +13,19 @@ type Props = {
   disabled?: boolean;
 };
 
-const labelFor = (cat: AxisCategory, id: string) => {
+type AxisLabel = { name: string; emoji: string; kind: IconKind; id: string };
+
+const labelFor = (cat: AxisCategory, id: string): AxisLabel => {
   if (cat === "suspect") {
     const c = characterById(id);
-    return { name: c.name, emoji: c.emoji };
+    return { name: c.name, emoji: c.emoji, kind: "characters", id: c.id };
   }
   if (cat === "item") {
     const i = itemById(id);
-    return { name: i.shortName, emoji: i.emoji };
+    return { name: i.shortName, emoji: i.emoji, kind: "items", id: i.id };
   }
   const l = locationById(id);
-  return { name: l.shortName, emoji: l.emoji };
+  return { name: l.shortName, emoji: l.emoji, kind: "locations", id: l.id };
 };
 
 const subgrids: { key: GridKey; rowCat: AxisCategory; colCat: AxisCategory; title: string }[] = [
@@ -105,7 +108,7 @@ function SubGrid({
               className="flex flex-col items-center justify-end pb-1 text-center text-[10px] font-semibold text-kitty-700"
               title={l.name}
             >
-              <span className="text-xl leading-none">{l.emoji}</span>
+              <Icon kind={l.kind} id={l.id} emoji={l.emoji} className="h-7 w-7 text-xl leading-none" />
               <span className="mt-1 line-clamp-2 leading-tight">{l.name}</span>
             </div>
           );
@@ -136,7 +139,7 @@ function RowGroup({
   cells,
   onTap,
 }: {
-  rowLabel: { name: string; emoji: string };
+  rowLabel: AxisLabel;
   rowId: string;
   colIds: string[];
   cells: Record<string, "blank" | "no" | "yes">;
@@ -145,9 +148,12 @@ function RowGroup({
   return (
     <>
       <div className="flex items-center gap-2 pl-1 text-sm font-semibold text-kitty-800">
-        <span className="text-lg" aria-hidden>
-          {rowLabel.emoji}
-        </span>
+        <Icon
+          kind={rowLabel.kind}
+          id={rowLabel.id}
+          emoji={rowLabel.emoji}
+          className="h-7 w-7 text-lg"
+        />
         <span className="line-clamp-1">{rowLabel.name}</span>
       </div>
       {colIds.map((c) => {

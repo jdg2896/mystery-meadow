@@ -4,6 +4,9 @@ import { itemById } from "../data/items";
 import { locationById } from "../data/locations";
 import type { Puzzle } from "../engine/types";
 import { usePuzzleStore } from "../store/puzzleStore";
+import { Icon, type IconKind } from "./Icon";
+
+type PickerOption = { id: string; label: string; emoji: string; kind: IconKind };
 
 export function AccusationPanel({
   puzzle,
@@ -40,6 +43,7 @@ export function AccusationPanel({
             id,
             label: characterById(id).name,
             emoji: characterById(id).emoji,
+            kind: "characters" as const,
           }))}
           selected={accusation.suspect}
           onPick={(id) => {
@@ -54,6 +58,7 @@ export function AccusationPanel({
             id,
             label: itemById(id).shortName,
             emoji: itemById(id).emoji,
+            kind: "items" as const,
           }))}
           selected={accusation.item}
           onPick={(id) => {
@@ -68,6 +73,7 @@ export function AccusationPanel({
             id,
             label: locationById(id).shortName,
             emoji: locationById(id).emoji,
+            kind: "locations" as const,
           }))}
           selected={accusation.location}
           onPick={(id) => {
@@ -101,7 +107,7 @@ function Picker({
   onPick,
 }: {
   label: string;
-  options: { id: string; label: string; emoji: string }[];
+  options: PickerOption[];
   selected: string | null;
   onPick: (id: string) => void;
 }) {
@@ -124,7 +130,7 @@ function Picker({
                   : "bg-kitty-50 text-kitty-700 ring-1 ring-kitty-200 hover:bg-kitty-100"
               }`}
             >
-              <span>{o.emoji}</span>
+              <Icon kind={o.kind} id={o.id} emoji={o.emoji} className="h-5 w-5" />
               <span>{o.label}</span>
             </button>
           );

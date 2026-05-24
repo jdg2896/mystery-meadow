@@ -3,6 +3,7 @@ import { characterById } from "../data/characters";
 import { itemById } from "../data/items";
 import { locationById } from "../data/locations";
 import type { Puzzle } from "../engine/types";
+import { Icon } from "./Icon";
 
 type Props = {
   puzzle: Puzzle;
@@ -45,11 +46,31 @@ export function ResultModal({ puzzle, outcome, durationMs, onPlayAgain, onClose 
             {outcome === "win" ? "Mystery solved!" : "So close!"}
           </h2>
           <p className="mt-1 text-sm text-kitty-800">
-            <span className="font-semibold">
-              {culprit.emoji} {culprit.name}
+            <span className="inline-flex items-center gap-1 font-semibold align-middle">
+              <Icon
+                kind="characters"
+                id={culprit.id}
+                emoji={culprit.emoji}
+                className="h-5 w-5"
+              />
+              {culprit.name}
             </span>{" "}
-            took <span className="font-semibold">{item.shortName}</span> from{" "}
-            <span className="font-semibold">{location.shortName}</span>.
+            took{" "}
+            <span className="inline-flex items-center gap-1 font-semibold align-middle">
+              <Icon kind="items" id={item.id} emoji={item.emoji} className="h-5 w-5" />
+              {item.shortName}
+            </span>{" "}
+            from{" "}
+            <span className="inline-flex items-center gap-1 font-semibold align-middle">
+              <Icon
+                kind="locations"
+                id={location.id}
+                emoji={location.emoji}
+                className="h-5 w-5"
+              />
+              {location.shortName}
+            </span>
+            .
           </p>
           <p className="mt-1 text-xs italic text-kitty-600">
             ({culprit.flavor} — totally suspicious behavior.)

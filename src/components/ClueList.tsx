@@ -1,4 +1,5 @@
-import type { Puzzle } from "../engine/types";
+import type { ClueSegment, Puzzle } from "../engine/types";
+import { Icon } from "./Icon";
 
 export function ClueList({ puzzle }: { puzzle: Puzzle }) {
   return (
@@ -10,10 +11,22 @@ export function ClueList({ puzzle }: { puzzle: Puzzle }) {
             key={c.id}
             className="rounded-2xl bg-kitty-50/70 px-3 py-2 text-sm leading-snug text-kitty-900 ring-1 ring-kitty-100"
           >
-            {c.text}
+            {c.parts.map((p, i) => (
+              <Segment key={i} part={p} />
+            ))}
           </li>
         ))}
       </ul>
     </div>
+  );
+}
+
+function Segment({ part }: { part: ClueSegment }) {
+  if (part.type === "text") return <span>{part.value}</span>;
+  return (
+    <span className="inline-flex items-center gap-1 align-middle font-semibold">
+      <Icon kind={part.kind} id={part.id} emoji={part.emoji} className="h-5 w-5" />
+      {part.label}
+    </span>
   );
 }

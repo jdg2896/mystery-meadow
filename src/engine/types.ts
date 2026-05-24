@@ -25,6 +25,19 @@ export type Clue =
       thenNot: { a: { category: Category; id: string }; b: { category: Category; id: string } };
     };
 
+// One unit of a rendered clue. Text segments are literal punctuation/glue;
+// entity segments carry enough data for the UI to render an inline Icon
+// + label without re-looking-up the entity.
+export type ClueSegment =
+  | { type: "text"; value: string }
+  | {
+      type: "entity";
+      kind: "characters" | "items" | "locations";
+      id: string;
+      emoji: string;
+      label: string;
+    };
+
 export type Puzzle = {
   id: string;
   seed: number;
@@ -36,6 +49,6 @@ export type Puzzle = {
   suspectIds: string[];
   itemIds: string[];
   locationIds: string[];
-  clues: { id: string; text: string; clue: Clue }[];
+  clues: { id: string; text: string; parts: ClueSegment[]; clue: Clue }[];
   solution: Solution;
 };
