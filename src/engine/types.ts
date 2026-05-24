@@ -42,7 +42,10 @@ export type Puzzle = {
   id: string;
   seed: number;
   mystery: {
+    // Plain-text form (used for share text, logging, accessibility); the
+    // app renders `parts` to get inline item/location icons in the headline.
     headline: string;
+    parts: ClueSegment[];
     item: string;
     location: string;
   };

@@ -4,8 +4,10 @@ import { ClueList } from "./components/ClueList";
 import { DeductionGrid } from "./components/DeductionGrid";
 import { HeaderBar } from "./components/HeaderBar";
 import { HowToPlayModal } from "./components/HowToPlayModal";
+import { Icon } from "./components/Icon";
 import { MobileTabs } from "./components/MobileTabs";
 import { ResultModal } from "./components/ResultModal";
+import type { ClueSegment } from "./engine/types";
 import { usePuzzle, useRandomFreeSeed } from "./hooks/usePuzzle";
 import { usePuzzleStore } from "./store/puzzleStore";
 import { type MobileTab, useUiStore } from "./store/uiStore";
@@ -109,8 +111,13 @@ export default function App() {
           <div className="text-[10px] font-semibold uppercase tracking-widest text-kitty-500">
             {mode === "daily" ? "Today's Mystery" : "Free Play Mystery"}
           </div>
-          <h1 className="mt-0.5 font-cute text-lg font-bold leading-tight text-kitty-700 sm:text-2xl">
-            {puzzle.mystery.headline}
+          <h1
+            className="mt-0.5 font-cute text-lg font-bold leading-tight text-kitty-700 sm:text-2xl"
+            aria-label={puzzle.mystery.headline}
+          >
+            {puzzle.mystery.parts.map((p, i) => (
+              <MysterySegment key={i} part={p} />
+            ))}
           </h1>
         </div>
 
@@ -167,5 +174,20 @@ export default function App() {
         />
       )}
     </div>
+  );
+}
+
+function MysterySegment({ part }: { part: ClueSegment }) {
+  if (part.type === "text") return <span>{part.value}</span>;
+  return (
+    <span className="mx-0.5 inline-flex items-center gap-1 align-middle">
+      <Icon
+        kind={part.kind}
+        id={part.id}
+        emoji={part.emoji}
+        className="h-6 w-6 sm:h-7 sm:w-7"
+      />
+      {part.label}
+    </span>
   );
 }

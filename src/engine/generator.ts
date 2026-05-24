@@ -10,7 +10,7 @@ import {
   type Rng,
 } from "./seededRandom";
 import { countSolutions } from "./solver";
-import type { Clue, Puzzle, Solution } from "./types";
+import type { Clue, ClueSegment, Puzzle, Solution } from "./types";
 
 // How strongly to prefer canonical (loved-gift / home-island) pairings.
 // 3× means a thematic option is three times as likely as a non-thematic one
@@ -50,12 +50,21 @@ function weightedBijection(
 
 const N = 4;
 
-const MYSTERY_HEADLINES: ((item: string, loc: string) => string)[] = [
-  (i, l) => `Who took ${i} from ${l}?`,
-  (i, l) => `Who whisked ${i} away from ${l}?`,
-  (i, l) => `Who borrowed ${i} from ${l} without asking?`,
-  (i, l) => `Who slipped off with ${i} at ${l}?`,
-  (i, l) => `Who scampered off with ${i} from ${l}?`,
+// Each template returns the headline as segments so the UI can render the
+// item / location as inline icons (same pattern clues use).
+type MysteryTemplate = (
+  itemSeg: ClueSegment,
+  locSeg: ClueSegment,
+) => ClueSegment[];
+
+const txt = (value: string): ClueSegment => ({ type: "text", value });
+
+const MYSTERY_HEADLINES: MysteryTemplate[] = [
+  (i, l) => [txt("Who took "), i, txt(" from "), l, txt("?")],
+  (i, l) => [txt("Who whisked "), i, txt(" away from "), l, txt("?")],
+  (i, l) => [txt("Who borrowed "), i, txt(" from "), l, txt(" without asking?")],
+  (i, l) => [txt("Who slipped off with "), i, txt(" at "), l, txt("?")],
+  (i, l) => [txt("Who scampered off with "), i, txt(" from "), l, txt("?")],
 ];
 
 type FactPair = {
@@ -231,17 +240,37 @@ function tryGenerate(seedKey: string, seed: number, rng: Rng): Puzzle | null {
     };
   });
 
-  const itemLabel = itemById(stolenItem).name;
-  const locLabel = locationById(sceneLocation).name;
-  const headline = MYSTERY_HEADLINES[Math.floor(rng() * MYSTERY_HEADLINES.length)](
-    itemLabel,
-    locLabel,
+  const itemObj = itemById(stolenItem);
+  const locObj = locationById(sceneLocation);
+  const itemSeg: ClueSegment = {
+    type: "entity",
+    kind: "items",
+    id: itemObj.id,
+    emoji: itemObj.emoji,
+    label: itemObj.name,
+  };
+  const locSeg: ClueSegment = {
+    type: "entity",
+    kind: "locations",
+    id: locObj.id,
+    emoji: locObj.emoji,
+    label: locObj.name,
+  };
+  const mysteryParts = MYSTERY_HEADLINES[Math.floor(rng() * MYSTERY_HEADLINES.length)](
+    itemSeg,
+    locSeg,
   );
+  const headline = partsToText(mysteryParts);
 
   return {
     id: seedKey,
     seed,
-    mystery: { headline, item: stolenItem, location: sceneLocation },
+    mystery: {
+      headline,
+      parts: mysteryParts,
+      item: stolenItem,
+      location: sceneLocation,
+    },
     suspectIds: suspects,
     itemIds: items,
     locationIds: locations,
