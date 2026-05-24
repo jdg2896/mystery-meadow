@@ -5,6 +5,13 @@ export type Character = {
   accent: string;
   flavor: string;
   pronoun: "she" | "he" | "they";
+  // Thematic home island, used by the generator to bias-assign suspects toward
+  // canonical pairings. Must match an id in data/locations.ts.
+  homeLocation: string;
+  // 3-heart "loves" gifts per the HKIA wiki. The generator gives these items
+  // a higher weight when assigning to this suspect, so solutions feel themed
+  // without being deterministic. Must match ids in data/items.ts.
+  lovedItems: string[];
 };
 
 export const CHARACTERS: Character[] = [
@@ -15,6 +22,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ff7ab8",
     flavor: "always sharing bakery snacks",
     pronoun: "she",
+    homeLocation: "seaside-resort",
+    lovedItems: ["red-bow-apple-pie"],
   },
   {
     id: "my-melody",
@@ -23,6 +32,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ff9ec7",
     flavor: "humming softly in pink hoods",
     pronoun: "she",
+    homeLocation: "seaside-resort",
+    lovedItems: ["pink-clouds-ice-cream", "strawberry-almond-galette", "pastel-fluff-heart-cake"],
   },
   {
     id: "cinnamoroll",
@@ -31,6 +42,8 @@ export const CHARACTERS: Character[] = [
     accent: "#bfe7ff",
     flavor: "drifting on cloud-shaped daydreams",
     pronoun: "he",
+    homeLocation: "cloud-island",
+    lovedItems: ["chocolate-chai"],
   },
   {
     id: "kuromi",
@@ -39,6 +52,8 @@ export const CHARACTERS: Character[] = [
     accent: "#c79bff",
     flavor: "scheming a tiny mischief",
     pronoun: "she",
+    homeLocation: "spooky-swamp",
+    lovedItems: ["pumpkin-spice-soda"],
   },
   {
     id: "pompompurin",
@@ -47,6 +62,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffd86b",
     flavor: "snoozing in a pudding hat",
     pronoun: "he",
+    homeLocation: "gemstone-mountain",
+    lovedItems: ["mamas-pudding"],
   },
   {
     id: "keroppi",
@@ -55,6 +72,8 @@ export const CHARACTERS: Character[] = [
     accent: "#9ee49a",
     flavor: "hopping near every pond",
     pronoun: "he",
+    homeLocation: "spooky-swamp",
+    lovedItems: ["critter-totem"],
   },
   {
     id: "chococat",
@@ -63,6 +82,8 @@ export const CHARACTERS: Character[] = [
     accent: "#8d5a3c",
     flavor: "sniffing out gizmos and gadgets",
     pronoun: "he",
+    homeLocation: "seaside-resort",
+    lovedItems: ["interactive-history-of-chocolate"],
   },
   {
     id: "badtz-maru",
@@ -71,6 +92,8 @@ export const CHARACTERS: Character[] = [
     accent: "#3a3a4a",
     flavor: "telling a deadpan joke",
     pronoun: "he",
+    homeLocation: "seaside-resort",
+    lovedItems: ["ultimate-joke-pizza"],
   },
   {
     id: "pochacco",
@@ -79,6 +102,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffffff",
     flavor: "sprinting laps before lunch",
     pronoun: "he",
+    homeLocation: "seaside-resort",
+    lovedItems: ["pochacco-energy-pop"],
   },
   {
     id: "my-sweet-piano",
@@ -87,6 +112,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffd0e6",
     flavor: "twirling a glittery ribbon",
     pronoun: "she",
+    homeLocation: "seaside-resort",
+    lovedItems: ["colorful-lamb-plush"],
   },
   {
     id: "tuxedosam",
@@ -95,6 +122,8 @@ export const CHARACTERS: Character[] = [
     accent: "#5a7bd1",
     flavor: "straightening a tiny bowtie",
     pronoun: "he",
+    homeLocation: "seaside-resort",
+    lovedItems: ["designer-island-doll"],
   },
   {
     id: "hangyodon",
@@ -103,6 +132,8 @@ export const CHARACTERS: Character[] = [
     accent: "#7fd1c0",
     flavor: "telling a wistful little tale",
     pronoun: "he",
+    homeLocation: "rainbow-reef",
+    lovedItems: ["mermaid-figure"],
   },
   {
     id: "pekkle",
@@ -111,6 +142,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffe680",
     flavor: "splashing through every puddle",
     pronoun: "he",
+    homeLocation: "gemstone-mountain",
+    lovedItems: ["mountain-soundtrack"],
   },
   {
     id: "retsuko",
@@ -119,6 +152,8 @@ export const CHARACTERS: Character[] = [
     accent: "#d96b6b",
     flavor: "humming a very quiet metal riff",
     pronoun: "she",
+    homeLocation: "mount-hothead",
+    lovedItems: ["volcanic-guitar"],
   },
   {
     id: "wish-me-mell",
@@ -127,6 +162,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffc4d6",
     flavor: "kneading a batch of cookie dough",
     pronoun: "she",
+    homeLocation: "merry-meadow",
+    lovedItems: ["rare-candle"],
   },
   {
     id: "big-challenges",
@@ -134,7 +171,9 @@ export const CHARACTERS: Character[] = [
     emoji: "🐕",
     accent: "#ffb380",
     flavor: "marching off on a tiny adventure",
-    pronoun: "they",
+    pronoun: "he",
+    homeLocation: "seaside-resort",
+    lovedItems: ["the-greatest-challenge"],
   },
   {
     id: "tophat",
@@ -143,6 +182,8 @@ export const CHARACTERS: Character[] = [
     accent: "#6b4a3a",
     flavor: "spinning vinyl in a very small hat",
     pronoun: "he",
+    homeLocation: "seaside-resort",
+    lovedItems: ["the-future-of-everything"],
   },
   {
     id: "lala",
@@ -151,6 +192,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffb8d4",
     flavor: "twirling under a pastel sky",
     pronoun: "she",
+    homeLocation: "cloud-island",
+    lovedItems: ["quattro-formaggi-pizza"],
   },
   {
     id: "kiki",
@@ -159,6 +202,8 @@ export const CHARACTERS: Character[] = [
     accent: "#88c5ff",
     flavor: "counting tiny stars by twos",
     pronoun: "he",
+    homeLocation: "cloud-island",
+    lovedItems: ["starry-skies-shake"],
   },
   {
     id: "usahana",
@@ -167,14 +212,8 @@ export const CHARACTERS: Character[] = [
     accent: "#ffc4e0",
     flavor: "tying a bow on a wildflower",
     pronoun: "she",
-  },
-  {
-    id: "cogimyun",
-    name: "Cogimyun",
-    emoji: "🍙",
-    accent: "#fff0e0",
-    flavor: "rolling a dot of dough between paws",
-    pronoun: "she",
+    homeLocation: "city-town",
+    lovedItems: ["rainbow-dango"],
   },
   {
     id: "moppu",
@@ -183,6 +222,8 @@ export const CHARACTERS: Character[] = [
     accent: "#d8c4ff",
     flavor: "sweeping pastel dust into a pile",
     pronoun: "they",
+    homeLocation: "icy-peak",
+    lovedItems: ["gamebear"],
   },
 ];
 

@@ -49,7 +49,6 @@ const CHARACTERS = {
   lala: "Icon_square_Lala",
   kiki: "Icon_square_Kiki",
   usahana: "Icon_square_Usahana",
-  cogimyun: "Icon_square_Cogimyun",
   moppu: "Icon_square_Moppu",
 };
 
@@ -84,6 +83,21 @@ const ITEMS = {
   "snow-ice": "Snow_Ice",
   "sushi-roll": "Sushi_Roll",
   dango: "Dango",
+  "chocolate-chai": "Chocolate_Chai",
+  "mamas-pudding": "Mama's_Pudding",
+  "interactive-history-of-chocolate": "Interactive_History_of_Chocolate",
+  "ultimate-joke-pizza": "Ultimate_Joke_Pizza",
+  "colorful-lamb-plush": "Colorful_Lamb_Plush",
+  "mermaid-figure": "Mermaid_Figure",
+  "mountain-soundtrack": "Mountain_Soundtrack",
+  "volcanic-guitar": "Volcanic_Guitar",
+  "rare-candle": "Rare_Candle",
+  "the-greatest-challenge": "The_Greatest_Challenge",
+  "the-future-of-everything": "The_Future_of_Everything",
+  "quattro-formaggi-pizza": "Quattro_Formaggi_Pizza",
+  "starry-skies-shake": "Starry_Skies_Shake",
+  "rainbow-dango": "Rainbow_Dango",
+  gamebear: "GameBear",
 };
 
 const LOCATIONS = {

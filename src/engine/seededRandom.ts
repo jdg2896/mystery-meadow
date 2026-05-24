@@ -33,6 +33,20 @@ export function pick<T>(arr: readonly T[], rng: Rng): T {
   return arr[Math.floor(rng() * arr.length)];
 }
 
+// Weighted index pick. All weights must be > 0; falls back to uniform if the
+// total is non-positive (defensive — shouldn't happen with our weights).
+export function weightedPickIndex(weights: readonly number[], rng: Rng): number {
+  let total = 0;
+  for (const w of weights) total += w;
+  if (total <= 0) return Math.floor(rng() * weights.length);
+  let r = rng() * total;
+  for (let i = 0; i < weights.length; i++) {
+    r -= weights[i];
+    if (r < 0) return i;
+  }
+  return weights.length - 1;
+}
+
 export function todayKey(now: Date = new Date()): string {
   const y = now.getFullYear();
   const m = String(now.getMonth() + 1).padStart(2, "0");

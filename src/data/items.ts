@@ -39,6 +39,23 @@ export const ITEMS: Item[] = [
   { id: "snow-ice", name: "the Snow Ice", shortName: "Snow Ice", emoji: "🍧" },
   { id: "sushi-roll", name: "the Sushi Roll", shortName: "Sushi Roll", emoji: "🍣" },
   { id: "dango", name: "the Dango", shortName: "Dango", emoji: "🍡" },
+  // 3-heart "loves" gifts — one per resident so each character has a thematic
+  // anchor in the puzzle pool. See data/characters.ts `lovedItems`.
+  { id: "chocolate-chai", name: "the Chocolate Chai", shortName: "Chocolate Chai", emoji: "🍵" },
+  { id: "mamas-pudding", name: "Mama's Pudding", shortName: "Mama's Pudding", emoji: "🍮" },
+  { id: "interactive-history-of-chocolate", name: "the Interactive History of Chocolate", shortName: "History of Chocolate", emoji: "📖" },
+  { id: "ultimate-joke-pizza", name: "the Ultimate Joke Pizza", shortName: "Ultimate Joke Pizza", emoji: "🍕" },
+  { id: "colorful-lamb-plush", name: "the Colorful Lamb Plush", shortName: "Colorful Lamb Plush", emoji: "🐑" },
+  { id: "mermaid-figure", name: "the Mermaid Figure", shortName: "Mermaid Figure", emoji: "🧜" },
+  { id: "mountain-soundtrack", name: "the Mountain Soundtrack", shortName: "Mountain Soundtrack", emoji: "🎵" },
+  { id: "volcanic-guitar", name: "the Volcanic Guitar", shortName: "Volcanic Guitar", emoji: "🎸" },
+  { id: "rare-candle", name: "the Rare Candle", shortName: "Rare Candle", emoji: "🕯️" },
+  { id: "the-greatest-challenge", name: "the Greatest Challenge", shortName: "Greatest Challenge", emoji: "📕" },
+  { id: "the-future-of-everything", name: "the Future of Everything", shortName: "Future of Everything", emoji: "📱" },
+  { id: "quattro-formaggi-pizza", name: "the Quattro Formaggi Pizza", shortName: "Quattro Formaggi", emoji: "🧀" },
+  { id: "starry-skies-shake", name: "the Starry Skies Shake", shortName: "Starry Skies Shake", emoji: "✨" },
+  { id: "rainbow-dango", name: "the Rainbow Dango", shortName: "Rainbow Dango", emoji: "🌈" },
+  { id: "gamebear", name: "the GameBear", shortName: "GameBear", emoji: "🎮" },
 ];
 
 export const itemById = (id: string): Item => {
