@@ -6,8 +6,6 @@ export type SfxKey = "click" | "mark" | "yes" | "no" | "win" | "lose";
 type Ctx = {
   audio: AudioContext;
   masterSfx: GainNode;
-  masterBgm: GainNode;
-  bgmStop?: () => void;
 };
 
 let ctxSingleton: Ctx | null = null;
@@ -19,10 +17,7 @@ function getCtx(): Ctx {
   const masterSfx = audio.createGain();
   masterSfx.gain.value = 0.45;
   masterSfx.connect(audio.destination);
-  const masterBgm = audio.createGain();
-  masterBgm.gain.value = 0.2;
-  masterBgm.connect(audio.destination);
-  ctxSingleton = { audio, masterSfx, masterBgm };
+  ctxSingleton = { audio, masterSfx };
   return ctxSingleton;
 }
 
@@ -74,9 +69,17 @@ const SFX: Record<SfxKey, () => void> = {
 /**
  * Cute kawaii arpeggio BGM that loops every 8 bars.
  * Built from simple oscillators so we ship zero audio assets.
+ *
+ * Each invocation owns its own gain node so cleanup can ramp it to silence
+ * and disconnect — otherwise oscillators we already scheduled would keep
+ * playing into a shared master, and toggling music off/on would layer a
+ * fresh loop on top of the still-audible old one.
  */
 function startBgm(): () => void {
-  const { audio, masterBgm } = getCtx();
+  const { audio } = getCtx();
+  const masterBgm = audio.createGain();
+  masterBgm.gain.value = 0.2;
+  masterBgm.connect(audio.destination);
   const tempo = 120; // bpm
   const beat = 60 / tempo;
   const bar = beat * 4;
@@ -138,6 +141,19 @@ function startBgm(): () => void {
   return () => {
     stopped = true;
     window.clearInterval(interval);
+    // Fade the entire BGM bus to silence so notes already queued in the
+    // Web Audio graph don't keep playing after we "stopped" the loop.
+    const t = audio.currentTime;
+    masterBgm.gain.cancelScheduledValues(t);
+    masterBgm.gain.setValueAtTime(masterBgm.gain.value, t);
+    masterBgm.gain.linearRampToValueAtTime(0, t + 0.08);
+    window.setTimeout(() => {
+      try {
+        masterBgm.disconnect();
+      } catch {
+        /* noop */
+      }
+    }, 120);
   };
 }
 
