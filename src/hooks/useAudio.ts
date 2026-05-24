@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import { useAudioStore } from "../store/audioStore";
 
 export type SfxKey = "click" | "mark" | "yes" | "no" | "win" | "lose";
@@ -141,13 +141,30 @@ function startBgm(): () => void {
   };
 }
 
+// BGM is a single global stream — keep its handle at module scope so multiple
+// useAudio() callers (e.g. tabs that mount/unmount) don't layer extra loops.
+let bgmStopGlobal: (() => void) | null = null;
+
+function syncBgm(shouldPlay: boolean) {
+  if (shouldPlay && !bgmStopGlobal) {
+    try {
+      const c = getCtx();
+      if (c.audio.state === "suspended") void c.audio.resume();
+      bgmStopGlobal = startBgm();
+    } catch {
+      /* noop */
+    }
+  } else if (!shouldPlay && bgmStopGlobal) {
+    bgmStopGlobal();
+    bgmStopGlobal = null;
+  }
+}
+
 export function useAudio() {
   const sfxOn = useAudioStore((s) => s.sfxOn);
   const bgmOn = useAudioStore((s) => s.bgmOn);
   const hasInteracted = useAudioStore((s) => s.hasInteracted);
   const noteInteractionStore = useAudioStore((s) => s.noteInteraction);
-  const startedRef = useRef(false);
-  const stopRef = useRef<(() => void) | null>(null);
 
   const noteInteraction = useCallback(() => {
     noteInteractionStore();
@@ -174,21 +191,7 @@ export function useAudio() {
   );
 
   useEffect(() => {
-    if (!hasInteracted) return;
-    if (bgmOn && !startedRef.current) {
-      try {
-        const c = getCtx();
-        if (c.audio.state === "suspended") void c.audio.resume();
-        stopRef.current = startBgm();
-        startedRef.current = true;
-      } catch {
-        /* noop */
-      }
-    } else if (!bgmOn && startedRef.current) {
-      stopRef.current?.();
-      stopRef.current = null;
-      startedRef.current = false;
-    }
+    syncBgm(bgmOn && hasInteracted);
   }, [bgmOn, hasInteracted]);
 
   return { play, noteInteraction };
