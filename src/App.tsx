@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AccusationPanel } from "./components/AccusationPanel";
 import { ClueList } from "./components/ClueList";
 import { DeductionGrid } from "./components/DeductionGrid";
@@ -8,7 +8,9 @@ import { MobileTabs } from "./components/MobileTabs";
 import { ResultModal } from "./components/ResultModal";
 import { usePuzzle, useRandomFreeSeed } from "./hooks/usePuzzle";
 import { usePuzzleStore } from "./store/puzzleStore";
-import { useUiStore } from "./store/uiStore";
+import { type MobileTab, useUiStore } from "./store/uiStore";
+
+const MOBILE_MAX_WIDTH = 1024; // matches Tailwind `lg` breakpoint
 
 export default function App() {
   const [mode, setMode] = useState<"daily" | "free">("daily");
@@ -35,6 +37,32 @@ export default function App() {
   useEffect(() => {
     if (!hasSeenHowTo) setShowHelp(true);
   }, [hasSeenHowTo]);
+
+  // Remember each mobile tab's scroll position so jumping Grid → Clues → Grid
+  // lands the player back where they were instead of at the top.
+  const tabRef = useRef<MobileTab>(mobileTab);
+  tabRef.current = mobileTab;
+  const tabScrollsRef = useRef<Record<MobileTab, number>>({ grid: 0, clues: 0, accuse: 0 });
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.innerWidth >= MOBILE_MAX_WIDTH) return;
+      tabScrollsRef.current[tabRef.current] = window.scrollY;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (window.innerWidth >= MOBILE_MAX_WIDTH) return;
+    window.scrollTo({ top: tabScrollsRef.current[mobileTab] ?? 0, behavior: "auto" });
+  }, [mobileTab]);
+
+  // Wipe the memory whenever a new puzzle replaces the old one — scroll
+  // positions from yesterday's grid are meaningless against today's layout.
+  useEffect(() => {
+    tabScrollsRef.current = { grid: 0, clues: 0, accuse: 0 };
+  }, [puzzle.id]);
 
   // Jump to Accuse tab on mobile once player has set all three picks
   const accusation = usePuzzleStore((s) => s.accusation);
