@@ -63,6 +63,13 @@ export const LOCATIONS: Location[] = [
     emoji: "☁️",
     vibe: "where stars are within hopping distance",
   },
+  {
+    id: "city-town",
+    name: "City Town",
+    shortName: "City Town",
+    emoji: "🏙️",
+    vibe: "where neon signs hum above a tangle of food stalls",
+  },
 ];
 
 export const locationById = (id: string): Location => {

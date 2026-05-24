@@ -78,6 +78,12 @@ const ITEMS = {
   "boulder-bits-ice-cream": "Boulder_Bits_Ice_Cream",
   "almond-pound-cake": "Almond_Pound_Cake",
   "pink-cloud": "Pink_Cloud",
+  boba: "Boba",
+  onigiri: "Onigiri",
+  taiyaki: "Taiyaki",
+  "snow-ice": "Snow_Ice",
+  "sushi-roll": "Sushi_Roll",
+  dango: "Dango",
 };
 
 const LOCATIONS = {
@@ -89,6 +95,7 @@ const LOCATIONS = {
   "merry-meadow": "Merry_Meadow_Icon",
   "icy-peak": "Icy_Peak",
   "cloud-island": "Cloud_Island_Icon",
+  "city-town": "City_Town_Icon",
 };
 
 async function resolveUrl(title) {

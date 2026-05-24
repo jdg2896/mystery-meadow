@@ -33,6 +33,12 @@ export const ITEMS: Item[] = [
   { id: "boulder-bits-ice-cream", name: "the Boulder Bits Ice Cream", shortName: "Boulder Bits", emoji: "🍨" },
   { id: "almond-pound-cake", name: "the Almond Pound Cake", shortName: "Pound Cake", emoji: "🍰" },
   { id: "pink-cloud", name: "the Pink Cloud", shortName: "Pink Cloud", emoji: "☁️" },
+  { id: "boba", name: "the Boba", shortName: "Boba", emoji: "🧋" },
+  { id: "onigiri", name: "the Onigiri", shortName: "Onigiri", emoji: "🍙" },
+  { id: "taiyaki", name: "the Taiyaki", shortName: "Taiyaki", emoji: "🐟" },
+  { id: "snow-ice", name: "the Snow Ice", shortName: "Snow Ice", emoji: "🍧" },
+  { id: "sushi-roll", name: "the Sushi Roll", shortName: "Sushi Roll", emoji: "🍣" },
+  { id: "dango", name: "the Dango", shortName: "Dango", emoji: "🍡" },
 ];
 
 export const itemById = (id: string): Item => {
