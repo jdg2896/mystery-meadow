@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { useAudioStore } from "../store/audioStore";
+import { Icon } from "./Icon";
 
 type Props = {
   mode: "daily" | "free";
@@ -14,16 +16,45 @@ export function HeaderBar({ mode, onModeChange, onReroll, onShowHelp }: Props) {
   const setSfx = useAudioStore((s) => s.setSfx);
   const noteInteraction = useAudioStore((s) => s.noteInteraction);
 
+  // Publish the rendered header height as a CSS variable so the mobile tabs
+  // (which sticky-pin below the header) can sit flush regardless of how the
+  // header wraps on narrow viewports.
+  const headerRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () => {
+      document.documentElement.style.setProperty(
+        "--header-h",
+        `${el.getBoundingClientRect().height}px`,
+      );
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-20 border-b border-kitty-200/60 bg-cream/85 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-cream/70">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-20 border-b border-kitty-200/60 bg-cream/85 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-cream/70"
+    >
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🎀</span>
-          <div className="leading-tight">
-            <div className="font-cute text-lg font-bold text-kitty-700">Mystery Meadow</div>
-            <div className="-mt-0.5 text-[10px] uppercase tracking-widest text-kitty-500">
-              a kawaii whodunnit
-            </div>
+          <Icon
+            kind="characters"
+            id="kuromi"
+            emoji="💀"
+            className="h-8 w-8 shrink-0"
+            alt=""
+          />
+          <div className="font-cute text-lg font-bold leading-tight text-kitty-700">
+            Mystery Meadow
           </div>
         </div>
 
