@@ -1,24 +1,28 @@
 export type Item = {
   id: string;
+  // Reads naturally inside clue templates like "X was carrying ___",
+  // typically prefixed with "the " (e.g. "the Pochacco Energy Pop").
   name: string;
   emoji: string;
+  // What the grid / accusation panel / result modal display. Must match
+  // `name` with any leading "the " stripped, so clues and UI never refer
+  // to the same item by different short forms.
   shortName: string;
 };
 
 // Items are real gifts from Hello Kitty Island Adventure, picked so the wiki
 // has matching artwork in public/img/items/<id>.png (see scripts/fetch-assets.mjs).
-// `name` reads naturally inside clue templates like "X was carrying ___".
 export const ITEMS: Item[] = [
   { id: "pink-clouds-ice-cream", name: "the Pink Clouds Ice Cream", shortName: "Pink Clouds Ice Cream", emoji: "🍦" },
   { id: "strawberry-shortcake", name: "the Strawberry Shortcake", shortName: "Strawberry Shortcake", emoji: "🍰" },
   { id: "pineapple-pizza", name: "the Pineapple Pizza", shortName: "Pineapple Pizza", emoji: "🍕" },
   { id: "jack-o-lantern", name: "the Jack-O-Lantern", shortName: "Jack-O-Lantern", emoji: "🎃" },
   { id: "swampy-lamb-plush", name: "the Swampy Lamb Plush", shortName: "Swampy Lamb Plush", emoji: "🐑" },
-  { id: "pochacco-energy-pop", name: "the Pochacco Energy Pop", shortName: "Energy Pop", emoji: "🍭" },
+  { id: "pochacco-energy-pop", name: "the Pochacco Energy Pop", shortName: "Pochacco Energy Pop", emoji: "🍭" },
   { id: "red-bow-apple-pie", name: "the Red Bow Apple Pie", shortName: "Red Bow Apple Pie", emoji: "🥧" },
   { id: "spooky-cake", name: "the Spooky Cake", shortName: "Spooky Cake", emoji: "🍰" },
-  { id: "pastel-fluff-heart-cake", name: "the Pastel Fluff Heart Cake", shortName: "Heart Cake", emoji: "💗" },
-  { id: "designer-island-doll", name: "the Designer Island Doll", shortName: "Island Doll", emoji: "🪆" },
+  { id: "pastel-fluff-heart-cake", name: "the Pastel Fluff Heart Cake", shortName: "Pastel Fluff Heart Cake", emoji: "💗" },
+  { id: "designer-island-doll", name: "the Designer Island Doll", shortName: "Designer Island Doll", emoji: "🪆" },
   { id: "pumpkin-spice-soda", name: "the Pumpkin Spice Soda", shortName: "Pumpkin Spice Soda", emoji: "🥤" },
   { id: "critter-totem", name: "the Critter Totem", shortName: "Critter Totem", emoji: "🗿" },
   { id: "hello-kittys-birthday-cake", name: "the Birthday Cake", shortName: "Birthday Cake", emoji: "🎂" },
@@ -29,9 +33,9 @@ export const ITEMS: Item[] = [
   { id: "sweet-dreams-stories", name: "the Sweet Dreams Stories", shortName: "Sweet Dreams Stories", emoji: "📖" },
   { id: "mamas-apple-pie", name: "Mama's Apple Pie", shortName: "Mama's Apple Pie", emoji: "🥧" },
   { id: "pineapple-stack-cake", name: "the Pineapple Stack Cake", shortName: "Pineapple Stack Cake", emoji: "🍍" },
-  { id: "strawberry-almond-galette", name: "the Strawberry Almond Galette", shortName: "Almond Galette", emoji: "🍓" },
-  { id: "boulder-bits-ice-cream", name: "the Boulder Bits Ice Cream", shortName: "Boulder Bits", emoji: "🍨" },
-  { id: "almond-pound-cake", name: "the Almond Pound Cake", shortName: "Pound Cake", emoji: "🍰" },
+  { id: "strawberry-almond-galette", name: "the Strawberry Almond Galette", shortName: "Strawberry Almond Galette", emoji: "🍓" },
+  { id: "boulder-bits-ice-cream", name: "the Boulder Bits Ice Cream", shortName: "Boulder Bits Ice Cream", emoji: "🍨" },
+  { id: "almond-pound-cake", name: "the Almond Pound Cake", shortName: "Almond Pound Cake", emoji: "🍰" },
   { id: "pink-cloud", name: "the Pink Cloud", shortName: "Pink Cloud", emoji: "☁️" },
   { id: "boba", name: "the Boba", shortName: "Boba", emoji: "🧋" },
   { id: "onigiri", name: "the Onigiri", shortName: "Onigiri", emoji: "🍙" },
@@ -43,7 +47,7 @@ export const ITEMS: Item[] = [
   // anchor in the puzzle pool. See data/characters.ts `lovedItems`.
   { id: "chocolate-chai", name: "the Chocolate Chai", shortName: "Chocolate Chai", emoji: "🍵" },
   { id: "mamas-pudding", name: "Mama's Pudding", shortName: "Mama's Pudding", emoji: "🍮" },
-  { id: "interactive-history-of-chocolate", name: "the Interactive History of Chocolate", shortName: "History of Chocolate", emoji: "📖" },
+  { id: "interactive-history-of-chocolate", name: "the Interactive History of Chocolate", shortName: "Interactive History of Chocolate", emoji: "📖" },
   { id: "ultimate-joke-pizza", name: "the Ultimate Joke Pizza", shortName: "Ultimate Joke Pizza", emoji: "🍕" },
   { id: "colorful-lamb-plush", name: "the Colorful Lamb Plush", shortName: "Colorful Lamb Plush", emoji: "🐑" },
   { id: "mermaid-figure", name: "the Mermaid Figure", shortName: "Mermaid Figure", emoji: "🧜" },
@@ -52,7 +56,7 @@ export const ITEMS: Item[] = [
   { id: "rare-candle", name: "the Rare Candle", shortName: "Rare Candle", emoji: "🕯️" },
   { id: "the-greatest-challenge", name: "the Greatest Challenge", shortName: "Greatest Challenge", emoji: "📕" },
   { id: "the-future-of-everything", name: "the Future of Everything", shortName: "Future of Everything", emoji: "📱" },
-  { id: "quattro-formaggi-pizza", name: "the Quattro Formaggi Pizza", shortName: "Quattro Formaggi", emoji: "🧀" },
+  { id: "quattro-formaggi-pizza", name: "the Quattro Formaggi Pizza", shortName: "Quattro Formaggi Pizza", emoji: "🧀" },
   { id: "starry-skies-shake", name: "the Starry Skies Shake", shortName: "Starry Skies Shake", emoji: "✨" },
   { id: "rainbow-dango", name: "the Rainbow Dango", shortName: "Rainbow Dango", emoji: "🌈" },
   { id: "gamebear", name: "the GameBear", shortName: "GameBear", emoji: "🎮" },
