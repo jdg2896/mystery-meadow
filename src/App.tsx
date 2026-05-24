@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AccusationPanel } from "./components/AccusationPanel";
 import { ClueList } from "./components/ClueList";
 import { DeductionGrid } from "./components/DeductionGrid";
@@ -10,9 +10,7 @@ import { ResultModal } from "./components/ResultModal";
 import type { ClueSegment } from "./engine/types";
 import { usePuzzle, useRandomFreeSeed } from "./hooks/usePuzzle";
 import { usePuzzleStore } from "./store/puzzleStore";
-import { type MobileTab, useUiStore } from "./store/uiStore";
-
-const MOBILE_MAX_WIDTH = 1024; // matches Tailwind `lg` breakpoint
+import { useUiStore } from "./store/uiStore";
 
 export default function App() {
   const [mode, setMode] = useState<"daily" | "free">("daily");
@@ -40,32 +38,6 @@ export default function App() {
     if (!hasSeenHowTo) setShowHelp(true);
   }, [hasSeenHowTo]);
 
-  // Remember each mobile tab's scroll position so jumping Grid → Clues → Grid
-  // lands the player back where they were instead of at the top.
-  const tabRef = useRef<MobileTab>(mobileTab);
-  tabRef.current = mobileTab;
-  const tabScrollsRef = useRef<Record<MobileTab, number>>({ grid: 0, clues: 0, accuse: 0 });
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.innerWidth >= MOBILE_MAX_WIDTH) return;
-      tabScrollsRef.current[tabRef.current] = window.scrollY;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useLayoutEffect(() => {
-    if (window.innerWidth >= MOBILE_MAX_WIDTH) return;
-    window.scrollTo({ top: tabScrollsRef.current[mobileTab] ?? 0, behavior: "auto" });
-  }, [mobileTab]);
-
-  // Wipe the memory whenever a new puzzle replaces the old one — scroll
-  // positions from yesterday's grid are meaningless against today's layout.
-  useEffect(() => {
-    tabScrollsRef.current = { grid: 0, clues: 0, accuse: 0 };
-  }, [puzzle.id]);
-
   // Jump to Accuse tab on mobile once player has set all three picks
   const accusation = usePuzzleStore((s) => s.accusation);
 
@@ -88,8 +60,29 @@ export default function App() {
     if (!hasSeenHowTo) markHowToSeen();
   };
 
+  const mysteryHeadline = (
+    <div className="mb-3 rounded-3xl bg-gradient-to-br from-kitty-100 to-kitty-50 p-3 text-center shadow-kawaiiSoft ring-1 ring-kitty-200/60 sm:p-4">
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-kitty-500">
+        {mode === "daily" ? "Today's Mystery" : "Free Play Mystery"}
+      </div>
+      <h1
+        className="mt-0.5 font-cute text-lg font-bold leading-tight text-kitty-700 sm:text-2xl"
+        aria-label={puzzle.mystery.headline}
+      >
+        {puzzle.mystery.parts.map((p, i) => (
+          <MysterySegment key={i} part={p} />
+        ))}
+      </h1>
+    </div>
+  );
+
   return (
-    <div className="min-h-full pb-20 kawaii-dots lg:pb-12">
+    // On mobile the whole app is a fixed-height flex column with no body scroll —
+    // header, mystery, and tabs are pinned at the top, and each tab content
+    // scrolls inside its own container below. That's why switching tabs no
+    // longer moves the pinned region and the browser preserves each container's
+    // own scrollTop natively. Desktop falls back to the original body-scroll layout.
+    <div className="kawaii-dots flex h-dvh flex-col overflow-hidden lg:block lg:h-auto lg:min-h-full lg:overflow-visible lg:pb-12">
       <HeaderBar
         mode={mode}
         onModeChange={(m) => {
@@ -106,22 +99,12 @@ export default function App() {
         onShowHelp={() => setShowHelp(true)}
       />
 
-      <main className="mx-auto max-w-5xl px-3 pt-3">
-        <div className="mb-3 rounded-3xl bg-gradient-to-br from-kitty-100 to-kitty-50 p-3 text-center shadow-kawaiiSoft ring-1 ring-kitty-200/60 sm:p-4">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-kitty-500">
-            {mode === "daily" ? "Today's Mystery" : "Free Play Mystery"}
-          </div>
-          <h1
-            className="mt-0.5 font-cute text-lg font-bold leading-tight text-kitty-700 sm:text-2xl"
-            aria-label={puzzle.mystery.headline}
-          >
-            {puzzle.mystery.parts.map((p, i) => (
-              <MysterySegment key={i} part={p} />
-            ))}
-          </h1>
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col overflow-hidden px-3 pt-3 lg:block lg:flex-initial lg:overflow-visible">
+        {/* Pinned top region (mystery + tabs) on mobile; just flows normally on desktop */}
+        <div className="shrink-0">
+          {mysteryHeadline}
+          <MobileTabs clueCount={puzzle.clues.length} />
         </div>
-
-        <MobileTabs clueCount={puzzle.clues.length} />
 
         {/* Desktop: side-by-side */}
         <div className="hidden gap-4 lg:grid lg:grid-cols-[1fr_360px]">
@@ -132,19 +115,19 @@ export default function App() {
           </div>
         </div>
 
-        {/* Mobile: all tabs mounted, only the active one is visible.
-            Keeping the DOM in place avoids the unmount/remount "reload" flash
-            when switching tabs — only window scroll changes. */}
-        <div className="lg:hidden">
-          <div hidden={mobileTab !== "grid"}>
+        {/* Mobile: per-tab scroll containers. All three mounted; toggling `hidden`
+            (display:none) keeps the DOM around so there's no remount flash, and
+            the browser preserves each container's scrollTop on its own. */}
+        <div className="relative flex-1 lg:hidden">
+          <TabPanel active={mobileTab === "grid"}>
             <DeductionGrid puzzle={puzzle} disabled={outcome !== null} />
-          </div>
-          <div hidden={mobileTab !== "clues"}>
+          </TabPanel>
+          <TabPanel active={mobileTab === "clues"}>
             <ClueList puzzle={puzzle} />
-          </div>
-          <div hidden={mobileTab !== "accuse"}>
+          </TabPanel>
+          <TabPanel active={mobileTab === "accuse"}>
             <AccusationPanel puzzle={puzzle} onResolve={() => undefined} />
-          </div>
+          </TabPanel>
         </div>
 
         {/* Mobile-only: nudge the player to the Accuse tab once all three picks are set */}
@@ -164,7 +147,7 @@ export default function App() {
             </div>
           )}
 
-        <footer className="mt-8 text-center text-[10px] text-kitty-500">
+        <footer className="mt-8 hidden text-center text-[10px] text-kitty-500 lg:block">
           made with 💖 — fan project, not affiliated with Sanrio or Sunblink.
         </footer>
       </main>
@@ -179,6 +162,17 @@ export default function App() {
           onClose={() => setShowResult(false)}
         />
       )}
+    </div>
+  );
+}
+
+function TabPanel({ active, children }: { active: boolean; children: React.ReactNode }) {
+  return (
+    <div
+      hidden={!active}
+      className="absolute inset-0 overflow-y-auto overscroll-contain pb-20"
+    >
+      {children}
     </div>
   );
 }

@@ -15,10 +15,7 @@ export function MobileTabs({ clueCount }: { clueCount: number }) {
     accusation.suspect !== null && accusation.item !== null && accusation.location !== null;
 
   return (
-    <nav
-      className="sticky z-10 -mx-3 mb-3 border-b border-kitty-200/60 bg-cream/85 px-3 py-1.5 backdrop-blur lg:hidden"
-      style={{ top: "var(--header-h, 52px)" }}
-    >
+    <nav className="-mx-3 mb-3 border-b border-kitty-200/60 bg-cream/85 px-3 py-1.5 backdrop-blur lg:hidden">
       <div className="flex gap-1.5">
         {TABS.map((t) => {
           const active = t.id === tab;
