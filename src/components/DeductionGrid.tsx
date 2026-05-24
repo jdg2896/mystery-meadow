@@ -96,7 +96,7 @@ function SubGrid({
       <div
         className="grid gap-1"
         style={{
-          gridTemplateColumns: `minmax(5.5rem, 8rem) repeat(${colIds.length}, minmax(2.25rem, 1fr))`,
+          gridTemplateColumns: `minmax(7rem, 9rem) repeat(${colIds.length}, minmax(2.25rem, 1fr))`,
         }}
       >
         <div />
@@ -147,14 +147,17 @@ function RowGroup({
 }) {
   return (
     <>
-      <div className="flex items-center gap-2 pl-1 text-sm font-semibold text-kitty-800">
+      <div
+        className="flex items-center gap-2 pl-1 text-xs font-semibold leading-tight text-kitty-800"
+        title={rowLabel.name}
+      >
         <Icon
           kind={rowLabel.kind}
           id={rowLabel.id}
           emoji={rowLabel.emoji}
-          className="h-7 w-7 text-lg"
+          className="h-7 w-7 shrink-0 text-lg"
         />
-        <span className="line-clamp-1">{rowLabel.name}</span>
+        <span className="line-clamp-2">{rowLabel.name}</span>
       </div>
       {colIds.map((c) => {
         const mark = cells[c] ?? "blank";
