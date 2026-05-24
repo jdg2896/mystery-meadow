@@ -41,6 +41,16 @@ const CHARACTERS = {
   "my-sweet-piano": "Icon_square_My_Sweet_Piano",
   tuxedosam: "Icon_square_Tuxedosam",
   hangyodon: "Icon_square_Hangyodon",
+  pekkle: "Icon_square_Pekkle",
+  retsuko: "Icon_square_Retsuko",
+  "wish-me-mell": "Icon_square_WishMeMell",
+  "big-challenges": "Icon_square_Big_Challenges",
+  tophat: "Icon_square_Tophat",
+  lala: "Icon_square_Lala",
+  kiki: "Icon_square_Kiki",
+  usahana: "Icon_square_Usahana",
+  cogimyun: "Icon_square_Cogimyun",
+  moppu: "Icon_square_Moppu",
 };
 
 const ITEMS = {
@@ -56,6 +66,18 @@ const ITEMS = {
   "designer-island-doll": "Designer_Island_Doll",
   "pumpkin-spice-soda": "Pumpkin_Spice_Soda",
   "critter-totem": "Critter_Totem",
+  "hello-kittys-birthday-cake": "Hello_Kitty's_Birthday_Cake",
+  "volcano-cake": "Volcano_Cake",
+  "hot-cocoa": "Hot_Cocoa",
+  "fruit-tart": "Fruit_Tart",
+  "pink-latte": "Pink_Latte",
+  "sweet-dreams-stories": "Sweet_Dreams_Stories",
+  "mamas-apple-pie": "Mama's_Apple_Pie",
+  "pineapple-stack-cake": "Pineapple_Stack_Cake",
+  "strawberry-almond-galette": "Strawberry_Almond_Galette",
+  "boulder-bits-ice-cream": "Boulder_Bits_Ice_Cream",
+  "almond-pound-cake": "Almond_Pound_Cake",
+  "pink-cloud": "Pink_Cloud",
 };
 
 const LOCATIONS = {
